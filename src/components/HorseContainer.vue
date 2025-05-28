@@ -77,12 +77,7 @@ onBeforeUnmount(() => {
       :style="{ transform: `translateX(${horse.position}px)` }"
     >
       <!-- Decreasing horse size to give long area effect -->
-      <img
-        src="../assets/harmonie.png"
-        :alt="horse.image"
-        :width="120 - round * 10"
-        :height="120 - round * 10"
-      />
+      <img :src="horse.image" :alt="horse.name" :width="70" :height="70" />
     </div>
 
     <!-- Leaderboard -->

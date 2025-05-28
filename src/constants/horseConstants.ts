@@ -1,3 +1,18 @@
+// src/constants/horseConstants.ts
+import harmonieImg from '../assets/harmonie.png'
+import harryImg from '../assets/harry.png'
+import ronImg from '../assets/ron.png'
+import lunaImg from '../assets/luna.png'
+import ginnyImg from '../assets/ginny.png'
+import dracoImg from '../assets/draco.png'
+import hagridImg from '../assets/hagrid.png'
+import minervaImg from '../assets/minerva.png'
+import remusImg from '../assets/remus.png'
+import nevilleImg from '../assets/neville.png'
+import snapeImg from '../assets/snape.png'
+import rubenusImg from '../assets/rubenus.png'
+import dambledoreImg from '../assets/dambledore.png'
+
 export const horseColors = [
   '#e6194b', // vivid red
   '#3cb44b', // bright green
@@ -44,28 +59,17 @@ export const horseNames = [
 ]
 
 export const horseImages = [
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/hagrid.png',
-  '../assets/malfoy.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
-  '../assets/harmonie.png',
-  '../assets/harry.png',
+  harmonieImg,
+  harryImg,
+  ronImg,
+  ginnyImg,
+  lunaImg,
+  dracoImg,
+  hagridImg,
+  minervaImg,
+  remusImg,
+  nevilleImg,
+  snapeImg,
+  rubenusImg,
+  dambledoreImg,
 ]

@@ -10,6 +10,8 @@ import minervaImg from '../assets/minerva.png'
 import remusImg from '../assets/remus.png'
 import nevilleImg from '../assets/neville.png'
 import snapeImg from '../assets/snape.png'
+import cedricImg from '../assets/cedric.png'
+import bellatrixImg from '../assets/bellatrix.png'
 import rubenusImg from '../assets/rubenus.png'
 import dambledoreImg from '../assets/dambledore.png'
 
@@ -72,4 +74,6 @@ export const horseImages = [
   snapeImg,
   rubenusImg,
   dambledoreImg,
+  cedricImg,
+  bellatrixImg,
 ]

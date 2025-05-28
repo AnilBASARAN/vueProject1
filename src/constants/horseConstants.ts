@@ -17,7 +17,7 @@ import fredImg from '../assets/fred.png'
 import georgeImg from '../assets/george.png'
 import mollyImg from '../assets/molly.png'
 import arthurImg from '../assets/arthur.png'
-import bellatrixImg from '../assets/bellatrix.png'
+import bellaImg from '../assets/bella.png'
 
 export const horseColors = [
   '#e6194b',
@@ -84,5 +84,5 @@ export const horseImages = [
   georgeImg,
   mollyImg,
   arthurImg,
-  bellatrixImg,
+  bellaImg,
 ]

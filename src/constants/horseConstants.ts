@@ -2,44 +2,46 @@
 import harmonieImg from '../assets/harmonie.png'
 import harryImg from '../assets/harry.png'
 import ronImg from '../assets/ron.png'
-import lunaImg from '../assets/luna.png'
 import ginnyImg from '../assets/ginny.png'
-import dracoImg from '../assets/draco.png'
-import hagridImg from '../assets/hagrid.png'
-import minervaImg from '../assets/minerva.png'
-import remusImg from '../assets/remus.png'
+import lunaImg from '../assets/luna.png'
 import nevilleImg from '../assets/neville.png'
-import snapeImg from '../assets/snape.png'
-import georgeImg from '../assets/george.png'
-import fredImg from '../assets/fred.png'
-import arthurImg from '../assets/arthur.png'
-import cedricImg from '../assets/cedric.png'
-import bellatrixImg from '../assets/bellatrix.png'
-import rubenusImg from '../assets/rubenus.png'
+import dracoImg from '../assets/draco.png'
+import remusImg from '../assets/remus.png'
 import dambledoreImg from '../assets/dambledore.png'
+import snapeImg from '../assets/snape.png'
+import minervaImg from '../assets/minerva.png'
+import rubeusImg from '../assets/rubenus.png'
+import cedricImg from '../assets/cedric.png'
+import choImg from '../assets/cho.png'
+import fredImg from '../assets/fred.png'
+import georgeImg from '../assets/george.png'
+import mollyImg from '../assets/molly.png'
+import arthurImg from '../assets/arthur.png'
+import bellatrixImg from '../assets/bellatrix.png'
 
 export const horseColors = [
-  '#e6194b', // vivid red
-  '#3cb44b', // bright green
-  '#ffe119', // yellow
-  '#0082c8', // strong blue
-  '#f58231', // orange
-  '#911eb4', // purple
-  '#46f0f0', // cyan
-  '#f032e6', // magenta
-  '#d2f53c', // lime
-  '#fabebe', // pink
-  '#008080', // teal
-  '#e6beff', // light purple
-  '#aa6e28', // brown
-  '#fffac8', // light yellow
-  '#800000', // maroon
-  '#aaffc3', // mint
-  '#808000', // olive
-  '#ffd8b1', // peach
-  '#000080', // navy
-  '#808080', // gray
+  '#e6194b',
+  '#3cb44b',
+  '#ffe119',
+  '#0082c8',
+  '#f58231',
+  '#911eb4',
+  '#46f0f0',
+  '#f032e6',
+  '#d2f53c',
+  '#fabebe',
+  '#008080',
+  '#e6beff',
+  '#aa6e28',
+  '#fffac8',
+  '#800000',
+  '#aaffc3',
+  '#808000',
+  '#ffd8b1',
+  '#000080',
+  '#808080',
 ]
+
 export const horseNames = [
   'Hermione',
   'Harry',
@@ -69,17 +71,18 @@ export const horseImages = [
   ronImg,
   ginnyImg,
   lunaImg,
-  dracoImg,
-  hagridImg,
-  minervaImg,
-  remusImg,
   nevilleImg,
-  snapeImg,
-  rubenusImg,
+  dracoImg,
+  remusImg,
   dambledoreImg,
+  snapeImg,
+  minervaImg,
+  rubeusImg,
   cedricImg,
-  bellatrixImg,
-  georgeImg,
+  choImg,
   fredImg,
+  georgeImg,
+  mollyImg,
   arthurImg,
+  bellatrixImg,
 ]

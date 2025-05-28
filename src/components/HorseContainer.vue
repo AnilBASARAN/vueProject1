@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, computed } from 'vue'
+import { onBeforeUnmount, ref, computed } from 'vue'
 import { horseColors, horseNames, horseImages } from '../constants/horseConstants'
 import { initializeHorses, shuffleArray } from '../helpers/utils'
 import type { Horse } from '../models/horse'
@@ -23,10 +23,14 @@ const store = useStore()
 const round = computed(() => store.state.round)
 let intervalId: number | undefined
 
+// start with full pool
 const horses = initializeHorses()
+
+// Computed: only horses whose speed > 0 are “active”
+const activeHorses = computed(() => tenHorses.value.filter((h) => h.speed > 0))
+
 // Move horses each tick
 function moveHorses() {
-  let allFinished = true
   isStarted.value = true
   for (const horse of tenHorses.value) {
     if (horse.speed === 0) continue
@@ -35,20 +39,19 @@ function moveHorses() {
     const finishLine = window.innerWidth * 0.85
 
     if (horse.position >= finishLine) {
-      horse.position = finishLine + 20 // Move horse off-screen
+      horse.position = finishLine + 20
       horse.speed = 0
       finishedHorses.value.push(horse)
-    } else {
-      allFinished = false
     }
   }
 
-  if (allFinished) {
+  // if none left active, end race
+  if (activeHorses.value.length === 0) {
     clearInterval(intervalId)
     store.commit('setResults', finishedHorses.value)
     store.commit('setShowResults', true)
     setTimeout(() => {
-      props.onFinish(tenHorses.value)
+      props.onFinish(finishedHorses.value)
       isStarted.value = false
     }, 2000)
   }
@@ -56,6 +59,7 @@ function moveHorses() {
 
 // Start race
 function startRace() {
+  finishedHorses.value = []
   tenHorses.value = shuffleArray(horses).slice(0, 10)
   intervalId = window.setInterval(moveHorses, 100)
 }
@@ -69,15 +73,15 @@ onBeforeUnmount(() => {
   <div class="horse-container">
     <Results />
     <HorseList :horses="horses" />
-    <!-- Horse animation -->
+
+    <!-- Horse animation: only active horses -->
     <div
-      v-for="horse in tenHorses"
+      v-for="horse in activeHorses"
       :key="horse.id"
       class="gif-wrapper"
       :style="{ transform: `translateX(${horse.position}px)` }"
     >
-      <!-- Decreasing horse size to give long area effect -->
-      <img :src="horse.image" :alt="horse.name" :width="70" :height="70" />
+      <img :src="horse.image" :alt="horse.name" width="70" height="70" />
     </div>
 
     <!-- Leaderboard -->
@@ -90,6 +94,7 @@ onBeforeUnmount(() => {
           {{ index + 1 }}. {{ horse.name }}
         </li>
       </ul>
+
       <div v-if="!isStarted">
         <ContainerButton :onPress="startRace" title="Start Race" />
         <ContainerButton
@@ -115,9 +120,9 @@ onBeforeUnmount(() => {
   height: 100vh;
   background-color: blue;
   background-image: url('/src/assets/background1.png');
-  background-repeat: no-repeat; /* don’t tile */
-  background-position: center center; /* center it */
-  background-size: cover; /* scale to cover entire box */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
 
 .gif-wrapper {
@@ -131,7 +136,6 @@ onBeforeUnmount(() => {
 
 .leaderboard {
   position: absolute;
-
   top: 10px;
   right: 10px;
   background: rgba(255, 255, 255, 0.8);
@@ -159,10 +163,10 @@ onBeforeUnmount(() => {
   margin-bottom: 6px;
 }
 
-.horse-circle {
-  position: absolute;
-  top: 30%;
-  left: 40%;
+.color-dot {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
+  margin-right: 8px;
 }
 </style>

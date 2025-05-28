@@ -18,6 +18,7 @@ import georgeImg from '../assets/george.png'
 import mollyImg from '../assets/molly.png'
 import arthurImg from '../assets/arthur.png'
 import bellaImg from '../assets/bella.png'
+import siriusImg from '../assets/sirius.png'
 
 export const horseColors = [
   '#e6194b',
@@ -50,10 +51,9 @@ export const horseNames = [
   'Luna',
   'Neville',
   'Draco',
-  'Sirius',
+  'Snape',
   'Remus',
-  'Albus',
-  'Severus',
+  'Dumbledore',
   'Minerva',
   'Rubeus',
   'Cedric',
@@ -63,6 +63,7 @@ export const horseNames = [
   'Molly',
   'Arthur',
   'Bellatrix',
+  'Sirius',
 ]
 
 export const horseImages = [
@@ -73,9 +74,9 @@ export const horseImages = [
   lunaImg,
   nevilleImg,
   dracoImg,
+  snapeImg,
   remusImg,
   dambledoreImg,
-  snapeImg,
   minervaImg,
   rubeusImg,
   cedricImg,
@@ -85,4 +86,5 @@ export const horseImages = [
   mollyImg,
   arthurImg,
   bellaImg,
+  siriusImg,
 ]

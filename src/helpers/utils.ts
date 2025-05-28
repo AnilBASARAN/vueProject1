@@ -1,4 +1,4 @@
-import { horseColors } from '../constants/horseConstants'
+import { horseColors, horseImages, horseNames } from '../constants/horseConstants'
 import type { Horse } from '../models/horse'
 
 export function getRandomInt(min: number, max: number): number {
@@ -23,6 +23,8 @@ export function initializeHorses(): Horse[] {
     id: index,
     position: 0,
     color: horseColors[index],
+    image: horseImages[index],
+    name: horseNames[index],
     speed: Math.random() * 20 + 10,
     condition: Math.floor(Math.random() * 100 + 1),
   }))

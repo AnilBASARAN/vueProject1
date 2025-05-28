@@ -28,7 +28,7 @@ const showHorses = computed(() => store.state.showHorseList)
         <li v-for="(horse, index) in horses" :key="horse.id" class="horse-row">
           <span class="color-dot" :style="{ backgroundColor: horse.color }"></span>
           <span class="horse-rank">{{ index + 1 }}.</span>
-          <span class="horse-id">Horse #{{ horse.id }}</span>
+          <span class="horse-id">{{ horse.name }} #{{ horse.id }}</span>
           <span class="horse-condition"> {{ horse.condition }}</span>
         </li>
       </ul>

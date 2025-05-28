@@ -4,4 +4,6 @@ export interface Horse {
   speed: number
   position: number
   condition: number
+  image: string
+  name: string
 }

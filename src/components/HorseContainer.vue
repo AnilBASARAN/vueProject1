@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue'
-import { horseColors } from '../constants/horseConstants'
+import { horseColors, horseNames, horseImages } from '../constants/horseConstants'
 import { initializeHorses, shuffleArray } from '../helpers/utils'
 import type { Horse } from '../models/horse'
 import { useStore } from 'vuex'
@@ -78,8 +78,8 @@ onBeforeUnmount(() => {
     >
       <!-- Decreasing horse size to give long area effect -->
       <img
-        src="../assets/harry.png"
-        alt="Horse"
+        src="../assets/harmonie.png"
+        :alt="horse.image"
         :width="120 - round * 10"
         :height="120 - round * 10"
       />
@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
       <ul>
         <li v-for="(horse, index) in finishedHorses" :key="horse.id">
           <span class="color-dot" :style="{ backgroundColor: horse.color }"></span>
-          {{ index + 1 }}. Horse #{{ horse.id }}
+          {{ index + 1 }}. {{ horse.name }}
         </li>
       </ul>
       <div v-if="!isStarted">

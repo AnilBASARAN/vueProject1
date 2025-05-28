@@ -12,6 +12,7 @@ import nevilleImg from '../assets/neville.png'
 import snapeImg from '../assets/snape.png'
 import georgeImg from '../assets/george.png'
 import fredImg from '../assets/fred.png'
+import arthurImg from '../assets/arthur.png'
 import cedricImg from '../assets/cedric.png'
 import bellatrixImg from '../assets/bellatrix.png'
 import rubenusImg from '../assets/rubenus.png'
@@ -80,4 +81,5 @@ export const horseImages = [
   bellatrixImg,
   georgeImg,
   fredImg,
+  arthurImg,
 ]

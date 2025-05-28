@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, computed } from 'vue'
 import { horseColors, horseNames, horseImages } from '../constants/horseConstants'
+import { backgroundImagesForRounds } from '../constants/backgroundConstants'
 import { initializeHorses, shuffleArray } from '../helpers/utils'
 import type { Horse } from '../models/horse'
 import { useStore } from 'vuex'
@@ -20,18 +21,20 @@ const tenHorses = ref<Horse[]>([])
 const isStarted = ref(false)
 
 const store = useStore()
+// 0-based round index from Vuex
 const round = computed(() => store.state.round)
+
 let intervalId: number | undefined
 
-// start with full pool
+// initialize full pool
 const horses = initializeHorses()
 
-// Computed: only horses whose speed > 0 are “active”
+// Only horses still moving show up
 const activeHorses = computed(() => tenHorses.value.filter((h) => h.speed > 0))
 
-// Move horses each tick
 function moveHorses() {
   isStarted.value = true
+
   for (const horse of tenHorses.value) {
     if (horse.speed === 0) continue
 
@@ -45,7 +48,7 @@ function moveHorses() {
     }
   }
 
-  // if none left active, end race
+  // when none remain active, finish up
   if (activeHorses.value.length === 0) {
     clearInterval(intervalId)
     store.commit('setResults', finishedHorses.value)
@@ -57,7 +60,6 @@ function moveHorses() {
   }
 }
 
-// Start race
 function startRace() {
   finishedHorses.value = []
   tenHorses.value = shuffleArray(horses).slice(0, 10)
@@ -70,11 +72,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="horse-container">
+  <div
+    class="horse-container"
+    :style="{ backgroundImage: `url(${backgroundImagesForRounds[round]})` }"
+  >
     <Results />
     <HorseList :horses="horses" />
 
-    <!-- Horse animation: only active horses -->
+    <!-- only active horses animate -->
     <div
       v-for="horse in activeHorses"
       :key="horse.id"
@@ -84,14 +89,13 @@ onBeforeUnmount(() => {
       <img :src="horse.image" :alt="horse.name" width="70" height="70" />
     </div>
 
-    <!-- Leaderboard -->
     <div class="leaderboard">
       <h3>Leaderboard</h3>
       <h3>Round: {{ round + 1 }} - {{ 1200 + round * 200 }} meters</h3>
       <ul>
-        <li v-for="(horse, index) in finishedHorses" :key="horse.id">
-          <span class="color-dot" :style="{ backgroundColor: horse.color }"></span>
-          {{ index + 1 }}. {{ horse.name }}
+        <li v-for="(horse, i) in finishedHorses" :key="horse.id">
+          <span class="color-dot" :style="{ backgroundColor: horse.color }"> </span>
+          {{ i + 1 }}. {{ horse.name }}
         </li>
       </ul>
 
@@ -119,7 +123,6 @@ onBeforeUnmount(() => {
   width: 100vw;
   height: 100vh;
   background-color: blue;
-  background-image: url('/src/assets/background1.png');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;

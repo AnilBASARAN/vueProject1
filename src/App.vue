@@ -38,7 +38,7 @@ const onFinish = (horses: Horse[]) => {
 <template>
   <header></header>
 
-  <main>
+  <main class="main-container">
     <div class="area">
       <!-- Horses -->
       <HorseContainer :key="round" :onFinish="onFinish" />
@@ -57,9 +57,14 @@ const onFinish = (horses: Horse[]) => {
 </template>
 
 <style scoped>
+.main-container {
+  display: flex;
+  justify-content: center;
+  width: 80%;
+}
 .area {
   display: flex;
-  width: 100vw;
+  width: 57vw;
   height: 100vh;
   background-color: green;
   flex-direction: row;

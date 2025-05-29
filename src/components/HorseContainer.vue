@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, computed } from 'vue'
+import { onBeforeUnmount, ref, computed } from 'vue'
 import { horseColors, horseNames, horseImages } from '../constants/horseConstants'
+import { backgroundImagesForRounds } from '../constants/backgroundConstants'
 import { initializeHorses, shuffleArray } from '../helpers/utils'
 import type { Horse } from '../models/horse'
 import { useStore } from 'vuex'
@@ -20,42 +21,47 @@ const tenHorses = ref<Horse[]>([])
 const isStarted = ref(false)
 
 const store = useStore()
+// 0-based round index from Vuex
 const round = computed(() => store.state.round)
+
 let intervalId: number | undefined
 
+// initialize full pool
 const horses = initializeHorses()
-// Move horses each tick
+
+// Only horses still moving show up
+const activeHorses = computed(() => tenHorses.value.filter((h) => h.speed > 0))
+
 function moveHorses() {
-  let allFinished = true
   isStarted.value = true
+
   for (const horse of tenHorses.value) {
     if (horse.speed === 0) continue
 
     horse.position += horse.speed
-    const finishLine = window.innerWidth * 0.85
+    const finishLine = window.innerWidth * 0.5
 
     if (horse.position >= finishLine) {
-      horse.position = finishLine + 20 // Move horse off-screen
+      horse.position = finishLine + 20
       horse.speed = 0
       finishedHorses.value.push(horse)
-    } else {
-      allFinished = false
     }
   }
 
-  if (allFinished) {
+  // when none remain active, finish up
+  if (activeHorses.value.length === 0) {
     clearInterval(intervalId)
     store.commit('setResults', finishedHorses.value)
     store.commit('setShowResults', true)
     setTimeout(() => {
-      props.onFinish(tenHorses.value)
+      props.onFinish(finishedHorses.value)
       isStarted.value = false
     }, 2000)
   }
 }
 
-// Start race
 function startRace() {
+  finishedHorses.value = []
   tenHorses.value = shuffleArray(horses).slice(0, 10)
   intervalId = window.setInterval(moveHorses, 100)
 }
@@ -66,45 +72,36 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="horse-container">
+  <div
+    class="horse-container"
+    :style="{ backgroundImage: `url(${backgroundImagesForRounds[round]})` }"
+  >
     <Results />
     <HorseList :horses="horses" />
-    <!-- Horse animation -->
+
+    <!-- only active horses animate -->
     <div
-      v-for="horse in tenHorses"
+      v-for="horse in activeHorses"
       :key="horse.id"
       class="gif-wrapper"
       :style="{ transform: `translateX(${horse.position}px)` }"
     >
-      <!-- Decreasing horse size to give long area effect -->
-      <img
-        src="../assets/harmonie.png"
-        :alt="horse.image"
-        :width="120 - round * 10"
-        :height="120 - round * 10"
-      />
+      <img :src="horse.image" :alt="horse.name" width="70" height="70" />
     </div>
 
-    <!-- Leaderboard -->
-    <div class="leaderboard">
-      <h3>Leaderboard</h3>
-      <h3>Round: {{ round + 1 }} - {{ 1200 + round * 200 }} meters</h3>
+    <div class="fotofinish">
+      <div class="header-foto">
+        <h5>Round: {{ round + 1 }}</h5>
+        <h5>{{ 1200 + round * 200 }} meters</h5>
+      </div>
+
+      <h3 :style="{ margin: '15px' }">Foto Finish</h3>
       <ul>
-        <li v-for="(horse, index) in finishedHorses" :key="horse.id">
-          <span class="color-dot" :style="{ backgroundColor: horse.color }"></span>
-          {{ index + 1 }}. {{ horse.name }}
-        </li>
+        <li v-for="(horse, i) in finishedHorses" :key="horse.id">{{ i + 1 }}. {{ horse.name }}</li>
       </ul>
+
       <div v-if="!isStarted">
-        <ContainerButton :onPress="startRace" title="Start Race" />
-        <ContainerButton
-          :onPress="() => store.commit('setShowResults', true)"
-          title="Show Results"
-        />
-        <ContainerButton
-          :onPress="() => store.commit('setShowHorseList', true)"
-          title="Show Horse List"
-        />
+        <ContainerButton :onPress="startRace" title="Start" />
       </div>
     </div>
   </div>
@@ -119,10 +116,9 @@ onBeforeUnmount(() => {
   width: 100vw;
   height: 100vh;
   background-color: blue;
-  background-image: url('/src/assets/background1.png');
-  background-repeat: no-repeat; /* don’t tile */
-  background-position: center center; /* center it */
-  background-size: cover; /* scale to cover entire box */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
 
 .gif-wrapper {
@@ -133,10 +129,29 @@ onBeforeUnmount(() => {
   will-change: transform;
   z-index: 1;
 }
+.header-foto {
+  padding: 20px;
+  margin: 20px;
+  display: inline-block;
+  color: #222;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.fotofinish {
+  position: absolute;
+  top: 10px;
+  right: 200px;
+
+  padding: 10px;
+  border-radius: 5px;
+  width: 250px;
+  color: black;
+  font-family: Arial, sans-serif;
+}
 
 .leaderboard {
   position: absolute;
-
   top: 10px;
   right: 10px;
   background: rgba(255, 255, 255, 0.8);
@@ -164,10 +179,16 @@ onBeforeUnmount(() => {
   margin-bottom: 6px;
 }
 
-.horse-circle {
-  position: absolute;
-  top: 30%;
-  left: 40%;
+.color-dot {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
+  margin-right: 8px;
+}
+
+li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 </style>

@@ -14,37 +14,32 @@ const showHorses = computed(() => store.state.showHorseList)
 </script>
 
 <template>
-  <div
-    v-if="showHorses"
-    class="modal-overlay"
-    @click.self="store.commit('setShowHorseList', false)"
-  >
+  <div class="conditions">
     <div class="leaderboard">
       <div class="list-header">
-        <h3>Horses</h3>
-        <h3>Conditions</h3>
+        <h5>Riders</h5>
+        <h6>Conditions</h6>
       </div>
       <ul>
         <li v-for="(horse, index) in horses" :key="horse.id" class="horse-row">
-          <span class="color-dot" :style="{ backgroundColor: horse.color }"></span>
           <span class="horse-rank">{{ index + 1 }}.</span>
-          <span class="horse-id">{{ horse.name }} #{{ horse.id }}</span>
+          <span class="horse-id">{{ horse.name }} </span>
           <span class="horse-condition"> {{ horse.condition }}</span>
         </li>
       </ul>
     </div>
-
-    <button class="close-btn" @click="store.commit('setShowHorseList', false)">Close</button>
   </div>
 </template>
 
 <style scoped>
-.leaderboard {
-  position: relative;
+.conditions {
+  position: absolute;
+  top: 1px;
+  left: 1px;
   background: rgba(255, 255, 255, 0.9);
   padding: 20px;
   border-radius: 10px;
-  width: 280px;
+  width: 120px;
   color: #222;
   font-family: Arial, sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);

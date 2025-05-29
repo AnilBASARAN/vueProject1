@@ -33,3 +33,13 @@
   cursor: pointer;
   font-size: 0.9rem;
 }
+
+/* NEW: a reusable “card” style for each section */
+.panel {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}

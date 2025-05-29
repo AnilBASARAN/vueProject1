@@ -60,13 +60,12 @@ const onFinish = (horses: Horse[]) => {
 .main-container {
   display: flex;
   justify-content: center;
-  width: 80%;
+  width: 100%;
 }
 .area {
   display: flex;
-  width: 57vw;
+  width: 100vw;
   height: 100vh;
-  background-color: green;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;

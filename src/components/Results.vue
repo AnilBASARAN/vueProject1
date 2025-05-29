@@ -11,7 +11,7 @@ const showResults = computed(() => store.state.showResults)
 
 <template>
   <div>
-    <div class="results-container">
+    <div class="results-container panel">
       <div v-for="(horses, key) in results" :key="key" class="result-board">
         <div class="result">
           <!-- <h3>Leaderboard</h3> -->
@@ -29,19 +29,13 @@ const showResults = computed(() => store.state.showResults)
 
 <style scoped>
 .results-container {
-  display: flex;
-  width: 20%;
-  position: absolute;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 1px;
-  border-radius: 5px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* two equal-width columns */
-  grid-auto-rows: auto; /* as many rows as you need */
-  gap: 1px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+  gap: 0.1rem;
+  width: 100%; /* full width of its panel */
+  box-sizing: border-box;
+  padding: 0;
 }
 
 .result-board {

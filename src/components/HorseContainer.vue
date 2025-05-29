@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, computed } from 'vue'
-import { horseColors, horseNames, horseImages } from '../constants/horseConstants'
 import { backgroundImagesForRounds } from '../constants/backgroundConstants'
 import { initializeHorses, shuffleArray } from '../helpers/utils'
 import type { Horse } from '../models/horse'
@@ -10,45 +9,36 @@ import HorseList from './HorseList.vue'
 import ContainerButton from './ContainerButton.vue'
 import '../assets/main.css'
 
-// Props
-const props = defineProps<{
-  onFinish: (horse: Horse[]) => void
-}>()
+// props
+const props = defineProps<{ onFinish: (horses: Horse[]) => void }>()
 
-// State
+// local state
 const finishedHorses = ref<Horse[]>([])
 const tenHorses = ref<Horse[]>([])
 const isStarted = ref(false)
 
 const store = useStore()
-// 0-based round index from Vuex
-const round = computed(() => store.state.round)
+const round = computed(() => store.state.round as number)
 
-let intervalId: number | undefined
+let intervalId: number
 
-// initialize full pool
-const horses = initializeHorses()
-
-// Only horses still moving show up
+// full pool
+const allHorses = initializeHorses()
+// only those still moving
 const activeHorses = computed(() => tenHorses.value.filter((h) => h.speed > 0))
 
 function moveHorses() {
   isStarted.value = true
-
-  for (const horse of tenHorses.value) {
-    if (horse.speed === 0) continue
-
-    horse.position += horse.speed
-    const finishLine = window.innerWidth * 0.5
-
-    if (horse.position >= finishLine) {
-      horse.position = finishLine + 20
-      horse.speed = 0
-      finishedHorses.value.push(horse)
+  for (const h of tenHorses.value) {
+    if (h.speed === 0) continue
+    h.position += h.speed
+    const finishLine = window.innerWidth * 0.75
+    if (h.position >= finishLine) {
+      h.position = finishLine + 20
+      h.speed = 0
+      finishedHorses.value.push(h)
     }
   }
-
-  // when none remain active, finish up
   if (activeHorses.value.length === 0) {
     clearInterval(intervalId)
     store.commit('setResults', finishedHorses.value)
@@ -61,14 +51,20 @@ function moveHorses() {
 }
 
 function startRace() {
+  // clear out last race
   finishedHorses.value = []
-  tenHorses.value = shuffleArray(horses).slice(0, 10)
+  // pick 10 new horses & reset their positions
+  tenHorses.value = shuffleArray(allHorses)
+    .slice(0, 10)
+    .map((h) => {
+      h.position = 0
+      return h
+    })
+  // kick off the loop
   intervalId = window.setInterval(moveHorses, 100)
 }
 
-onBeforeUnmount(() => {
-  if (intervalId) clearInterval(intervalId)
-})
+onBeforeUnmount(() => clearInterval(intervalId))
 </script>
 
 <template>
@@ -76,119 +72,73 @@ onBeforeUnmount(() => {
     class="horse-container"
     :style="{ backgroundImage: `url(${backgroundImagesForRounds[round]})` }"
   >
-    <Results />
-    <HorseList :horses="horses" />
-
-    <!-- only active horses animate -->
+    <!-- 1) Horses flying across the background -->
     <div
-      v-for="horse in activeHorses"
+      v-for="(horse, idx) in activeHorses"
       :key="horse.id"
-      class="gif-wrapper"
-      :style="{ transform: `translateX(${horse.position}px)` }"
+      class="horse"
+      :style="{ left: horse.position + 'px', bottom: idx * 60 + 'px' }"
     >
       <img :src="horse.image" :alt="horse.name" width="70" height="70" />
     </div>
 
-    <div class="fotofinish">
-      <div class="header-foto">
-        <h5>Round: {{ round + 1 }}</h5>
-        <h5>{{ 1200 + round * 200 }} meters</h5>
-      </div>
+    <!-- 2) LEFT sidebar: HorseList & Foto-Finish -->
+    <div class="controls-left">
+      <HorseList class="panel" :horses="tenHorses" />
 
-      <h3 :style="{ margin: '15px' }">Foto Finish</h3>
-      <ul>
-        <li v-for="(horse, i) in finishedHorses" :key="horse.id">{{ i + 1 }}. {{ horse.name }}</li>
-      </ul>
-
-      <div v-if="!isStarted">
-        <ContainerButton :onPress="startRace" title="Start" />
+      <div class="panel foto-finish">
+        <h3>Foto Finish</h3>
+        <ul>
+          <li v-for="(h, i) in finishedHorses" :key="h.id">{{ i + 1 }}. {{ h.name }}</li>
+        </ul>
+        <ContainerButton v-if="!isStarted" :onPress="startRace" title="Start" />
       </div>
+    </div>
+
+    <!-- 3) RIGHT sidebar: live Results -->
+    <div class="controls-right">
+      <Results class="panel" />
     </div>
   </div>
 </template>
 
 <style scoped>
 .horse-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100vw;
-  height: 100vh;
-  background-color: blue;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-}
-
-.gif-wrapper {
   position: relative;
-  display: flex;
-  transition: transform 0.1s linear;
-  margin-bottom: 5px;
-  will-change: transform;
-  z-index: 1;
-}
-.header-foto {
-  padding: 20px;
-  margin: 20px;
-  display: inline-block;
-  color: #222;
-  font-family: Arial, sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
 }
 
-.fotofinish {
+.horse {
   position: absolute;
-  top: 10px;
-  right: 200px;
-
-  padding: 10px;
-  border-radius: 5px;
-  width: 250px;
-  color: black;
-  font-family: Arial, sans-serif;
+  transition: left 0.1s linear;
+  will-change: left;
+  z-index: 2; /* keep horses above your panels */
 }
 
-.leaderboard {
+.controls-left {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-radius: 5px;
-  width: 250px;
-  color: black;
-  font-family: Arial, sans-serif;
+  top: 1rem;
+  left: 1rem;
+  display: grid;
+  gap: 1rem;
+  max-width: 280px;
 }
 
-.leaderboard h3 {
-  margin-bottom: 10px;
-  font-weight: bold;
+.controls-right {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  gap: 1rem;
+  max-width: 280px;
 }
-
-.leaderboard ul {
+li,
+ul {
   list-style: none;
-  padding: 0;
   margin: 0;
-}
-
-.leaderboard li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.color-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-li {
-  list-style: none;
   padding: 0;
-  margin: 0;
 }
 </style>

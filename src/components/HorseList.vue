@@ -3,51 +3,45 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 import type { Horse } from '../models/horse'
 import '../assets/main.css'
-
+import { initializeHorses, shuffleArray } from '../helpers/utils'
 // Props
 const props = defineProps<{
   horses: Horse[]
 }>()
-
+const allHorses = initializeHorses()
 const store = useStore()
 const showHorses = computed(() => store.state.showHorseList)
 </script>
 
 <template>
-  <div class="conditions">
-    <div class="leaderboard">
-      <div class="list-header">
-        <h5>Riders</h5>
-        <h6>Conditions</h6>
+  <div class="conditions panel">
+    <div class="conditions">
+      <div class="leaderboard">
+        <div class="list-header">
+          <h4>Riders</h4>
+          <h4>Conditions</h4>
+        </div>
+        <ul>
+          <li v-for="(horse, index) in allHorses" :key="horse.id" class="horse-row">
+            <span class="horse-rank">{{ index + 1 }}.</span>
+            <span class="horse-id">{{ horse.name }} </span>
+            <span class="horse-condition"> {{ horse.condition }}</span>
+          </li>
+        </ul>
       </div>
-      <ul>
-        <li v-for="(horse, index) in horses" :key="horse.id" class="horse-row">
-          <span class="horse-rank">{{ index + 1 }}.</span>
-          <span class="horse-id">{{ horse.name }} </span>
-          <span class="horse-condition"> {{ horse.condition }}</span>
-        </li>
-      </ul>
     </div>
   </div>
 </template>
 
 <style scoped>
 .conditions {
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 20px;
-  border-radius: 10px;
-  width: 120px;
-  color: #222;
-  font-family: Arial, sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .leaderboard h3 {
   margin-bottom: 12px;
-  font-size: 1.5rem;
+  font-size: 2rem;
   text-align: flex-start;
 }
 
@@ -60,15 +54,15 @@ const showHorses = computed(() => store.state.showHorseList)
 .leaderboard li {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 1px;
   font-size: 1rem;
 }
 
 .horse-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 5px;
+  gap: 1px;
+  margin-bottom: 1px;
 }
 
 .color-dot {
@@ -81,6 +75,7 @@ const showHorses = computed(() => store.state.showHorseList)
 .horse-rank,
 .horse-id {
   font-size: 14px;
+  margin-right: 20px;
 }
 
 .horse-condition {
@@ -89,10 +84,14 @@ const showHorses = computed(() => store.state.showHorseList)
   font-style: italic;
   color: #666;
 }
+li {
+  margin: 0;
+  padding: 0;
+}
 
 .list-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
 }
 </style>
